@@ -1,0 +1,40 @@
+### Node
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.pid
+*.gz
+pids
+logs
+results
+
+node_modules
+npm-debug.log
+
+### Sublimetext
+/*.sublime-project
+
+### Netbeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+### Windows
+Thumbs.db
+Desktop.ini
+
+### OSX 
+.DS_Store
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
