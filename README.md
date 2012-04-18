@@ -6,7 +6,7 @@ API
 
 Supports the following methods (soon). Throw errors for unsupported methods.
 
-| **Verb** | **Method*    | **Result**   |
+| **Verb** | **Method**    | **Result**   |
 |--------|-----------------------------|------------------------------------------|
 | GET    | /locations                  | returns list of locations                |
 | GET    | /locations/:id              | returns a location                       |
