@@ -4,14 +4,12 @@
  */
 
 var express = require('express')
-  , routes = require('./routes')
-  , http = require('http');
+  , routes = require('./routes');
 
-var app = express();
-var port = (process.env.VMC_APP_PORT || 3001);
+var app = module.exports = express.createServer();
+
+var port = (process.env.VMC_APP_PORT || 3005);
 var host = (process.env.VMC_APP_HOST || 'localhost');
-
-// Configuration
 
 app.configure(function(){
   app.set('views', __dirname + '/views');
@@ -22,20 +20,16 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser('your secret here'));
-  app.use(express.session());
+  app.use(express.session({ secret: 'joLi45eZq2' }));
   app.use(app.router);
 });
 
 app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-});
-
-app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
 app.get('/', routes.index);
 
-http.createServer(app).listen(port, host);
+app.listen(port,host);
 
-console.log("Express server listening on port 3001");
+console.log("Express server listening on port %d in %s mode", port, app.settings.env);
