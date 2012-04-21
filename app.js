@@ -90,5 +90,84 @@ app.post('/locations', function(req, res){
   });
  });
 
+// returns locations
+app.get('/locations', function(req, res){
+
+  require('mongodb').connect(mongourl, function(err, conn){
+    conn.collection('locations', function(err, coll){
+      coll.find(function(err, cursor) {
+      cursor.toArray(function(err, items) {
+        res.writeHead(200, {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        });
+        res.end(JSON.stringify(items));
+      });
+      });
+    });
+  });
+
+});
+
+// returns a location by id
+app.get('/locations/:loc_id', function(req, res){
+
+  var ObjectID = require('mongodb').ObjectID;
+  
+  require('mongodb').connect(mongourl, function(err, conn){
+    conn.collection('locations', function(err, coll){
+      coll.findOne({'_id':new ObjectID(req.params.loc_id)}, function(err, document) {
+      res.writeHead(200, {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      });
+      res.end(JSON.stringify(document));
+      });
+    });
+  });
+  
+});
+
+// creates a new venue for a location
+app.post('/locations/:loc_id/venues', function(req, res){
+  
+  // add the location id to the json
+  var venue = req.body;
+  venue['location'] = req.params.loc_id;
+
+  require('mongodb').connect(mongourl, function(err, conn){
+    conn.collection('venues', function(err, coll){
+      coll.insert( venue, {safe:true}, function(err){
+      res.writeHead(200, {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      });
+      res.end(JSON.stringify(venue));
+      });
+    });
+  });
+
+});
+
+// updates a venue
+app.put('/v.1/locations/:loc_id/venues/:venue_id', function(req, res){
+
+  var ObjectID = require('mongodb').ObjectID;
+  
+  require('mongodb').connect(mongourl, function(err, conn){
+    conn.collection('venues', function(err, coll){
+      coll.findAndModify({'_id':new ObjectID(req.params.venue_id)}, [['name','asc']], { $set: req.body }, {}, function(err, document) {
+      res.writeHead(200, {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      });
+      res.end(JSON.stringify(document));
+      });
+    });
+  });
+
+});
+
+
 app.listen(port, host);
 console.log("Express server listening on port %d in %s mode", port, app.settings.env);
